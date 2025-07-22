@@ -202,14 +202,16 @@ return (
                 <Button
                   variant={selectedDashboard?.id === d.id ? "default" : "outline"}
                   onClick={() => setSelectedDashboard(d)}
-                  className={
-                    selectedDashboard?.id === d.id
-                      ? "bg-[#f1d3ec] text-[#741b53] hover:bg-[#ecc6e3] border-none w-full"
-                      : "w-full"
-                  }
+                  title={d.name}
+                  className={`
+                    w-full max-w-[160px] text-left
+                    line-clamp-1
+                    ${selectedDashboard?.id === d.id ? "bg-[#f1d3ec] text-[#741b53] hover:bg-[#ecc6e3] border-none" : ""}
+                  `}
                 >
                   {d.name}
                 </Button>
+
                 <Button size="icon" variant="ghost" onClick={() => {
                   setEditedName(d.name);
                   setEditingName(d.id);
@@ -227,7 +229,14 @@ return (
     </div>
 
     {/* 오른쪽 차트 영역 */}
-    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="flex-1">
+        {selectedDashboard && (
+  <h1 className="text-2xl font-bold mb-4 text-[#741b53] truncate">
+    {selectedDashboard.name}
+  </h1>
+)}
+    
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {/* 고정된 Add Chart 박스 */}
       {selectedDashboard && (
         <Dialog
@@ -342,6 +351,7 @@ return (
           )}
         </DialogContent>
       </Dialog>
+    </div>
     </div>
   </div>
 );

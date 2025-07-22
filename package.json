@@ -12,6 +12,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-select": "^2.2.5",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "autoprefixer": "^10.4.0",
     "chart.js": "^4.4.0",
     "class-variance-authority": "^0.7.1",
