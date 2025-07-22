@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -48,6 +49,9 @@ export default function DashboardApp() {
   const [chartDialogOpen, setChartDialogOpen] = useState(false);
   const [zoomedChart, setZoomedChart] = useState<any | null>(null);
   const [newChart, setNewChart] = useState({ title: "", type: "bar", dataEndpoint: "" });
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<{ type: "dashboard" | "chart"; id: string } | null>(null);
+
 
   useEffect(() => {
     fetch("/api/dashboards")
@@ -167,6 +171,19 @@ export default function DashboardApp() {
     }
   };
 
+  const handleSelectDashboard = (d: any) => {
+  setSelectedDashboard(d);
+
+  // ripple 애니메이션 수동으로 트리거
+  const btn = document.getElementById(`dashboard-btn-${d.id}`);
+  if (btn) {
+    btn.classList.remove("animate"); // 재사용 위해 remove 후 reflow
+    void btn.offsetWidth; // 강제로 리플로우
+    btn.classList.add("animate");
+  }
+};
+
+
 return (
   <div className="w-full max-w-7xl mx-auto px-6 pt-[200px] pb-12 flex flex-row gap-6">
 
@@ -200,14 +217,12 @@ return (
             ) : (
               <>
                 <Button
-                  variant={selectedDashboard?.id === d.id ? "default" : "outline"}
-                  onClick={() => setSelectedDashboard(d)}
-                  title={d.name}
-                  className={`
-                    w-full max-w-[160px] text-left
-                    line-clamp-1
-                    ${selectedDashboard?.id === d.id ? "bg-[#f1d3ec] text-[#741b53] hover:bg-[#ecc6e3] border-none" : ""}
-                  `}
+                  id={`dashboard-btn-${d.id}`}
+                  onClick={() => handleSelectDashboard(d)}
+                  className={cn(
+                    "w-full max-w-[160px] text-left line-clamp-1 ripple-fill bg-transparent",
+                    selectedDashboard?.id === d.id ? "text-[#741b53] animate" : ""
+                  )}
                 >
                   {d.name}
                 </Button>
@@ -218,7 +233,14 @@ return (
                 }}>
                   <Pencil className="w-4 h-4" />
                 </Button>
-                <Button size="icon" variant="ghost" onClick={() => deleteDashboard(d.id)}>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => {
+                    setDeleteTarget({ type: "dashboard", id: d.id });
+                    setConfirmOpen(true);
+                  }}
+                >
                   <Trash2 className="w-4 h-4 text-red-500" />
                 </Button>
               </>
@@ -317,7 +339,11 @@ return (
                                 <Button
                                   size="icon"
                                   variant="ghost"
-                                  onClick={(e) => { e.stopPropagation(); deleteChart(chart.id); }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setDeleteTarget({ type: "chart", id: chart.id });
+                                    setConfirmOpen(true);
+                                  }}
                                   title="Delete"
                                 >
                                   <Trash2 className="w-4 h-4 text-red-500" />
@@ -351,6 +377,30 @@ return (
           )}
         </DialogContent>
       </Dialog>
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+  <DialogContent className="space-y-4 text-center">
+    <h2 className="text-xl font-semibold">Confirm delete?</h2>
+    <p>This action cannot be undone.</p>
+    <div className="flex justify-center gap-4 pt-4">
+      <Button
+        variant="destructive"
+        onClick={() => {
+          if (deleteTarget) {
+            if (deleteTarget.type === "chart") deleteChart(deleteTarget.id);
+            else if (deleteTarget.type === "dashboard") deleteDashboard(deleteTarget.id);
+          }
+          setConfirmOpen(false);
+          setDeleteTarget(null);
+        }}
+      >
+        Yes
+      </Button>
+      <Button variant="outline" onClick={() => setConfirmOpen(false)}>
+        Cancel
+      </Button>
+    </div>
+  </DialogContent>
+</Dialog>
     </div>
     </div>
   </div>

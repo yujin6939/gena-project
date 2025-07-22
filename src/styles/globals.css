@@ -6,3 +6,98 @@ html, body {
   margin: 0;
   padding: 0;
 }
+
+.button-ripple {
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.button-ripple::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: #f1d3ec; /* 원하는 선택 배경색 */
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 1.2s ease, height 1.2s ease;
+  z-index: -1;
+}
+
+.button-ripple.selected::before {
+  width: 300%;
+  height: 300%;
+}
+
+.ripple-fill {
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  background-color: transparent;
+  transition: color 0.3s ease;
+}
+
+.ripple-fill::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background-color: #f1d3ec; /* 퍼지는 색 */
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.5s ease, height 0.5s ease;
+  z-index: -1;
+}
+
+.ripple-fill.animate::before {
+  width: 300%;
+  height: 300%;
+}
+
+.ripple-fill:hover {
+  background-color: transparent !important;
+}
+
+@layer utilities {
+  @keyframes fade-up {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-down {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.5s ease-out forwards;
+  }
+
+  .animate-fade-down {
+    animation: fade-down 0.5s ease-out forwards;
+  }
+
+  .animate-delay-\[100ms\] { animation-delay: 0.1s; }
+  .animate-delay-\[200ms\] { animation-delay: 0.2s; }
+  .animate-delay-\[300ms\] { animation-delay: 0.3s; }
+  .animate-delay-\[400ms\] { animation-delay: 0.4s; }
+  .animate-delay-\[500ms\] { animation-delay: 0.5s; }
+  /* 필요에 따라 더 추가 */
+}
