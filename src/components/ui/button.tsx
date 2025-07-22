@@ -7,7 +7,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-blue-600 text-white hover:bg-blue-700",
+        default: "bg-[#f1d3ec] text-[#741b53] hover:bg-[#ecc6e3]",
         outline: "border border-input bg-white text-black hover:bg-gray-100",
         ghost: "bg-transparent hover:bg-muted",
         destructive: "bg-red-600 text-white hover:bg-red-700",
@@ -20,11 +20,12 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "default", // 이게 기본값이므로 자동으로 적용됨
       size: "default",
     },
   }
 );
+
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,

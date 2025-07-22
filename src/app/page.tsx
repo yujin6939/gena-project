@@ -179,7 +179,7 @@ export default function DashboardApp() {
         <Button
           onClick={createDashboard}
           disabled={!newDashboardName.trim()}
-          className="bg-purple-200 text-purple-700 hover:bg-purple-300 border-none"
+          className="bg-[#f1d3ec] text-[#741b53] hover:bg-[#ecc6e3] border-none"
         >
           ➕ Create
         </Button>
@@ -188,7 +188,7 @@ export default function DashboardApp() {
             <DialogTrigger asChild>
               <Button
                 variant="secondary"
-                className="bg-purple-200 text-purple-700 hover:bg-purple-300 border-none"
+                className="bg-[#f1d3ec] text-[#741b53] hover:bg-[#ecc6e3] border-none"
               >
                 ➕ Add Chart
               </Button>
@@ -249,7 +249,7 @@ export default function DashboardApp() {
                   onClick={() => setSelectedDashboard(d)}
                   className={
                     selectedDashboard?.id === d.id
-                      ? "bg-purple-200 text-purple-700 hover:bg-purple-300 border-none"
+                      ? "bg-[#f1d3ec] text-[#741b53] hover:bg-[#ecc6e3] border-none"
                       : ""
                   }
                 >
@@ -303,12 +303,7 @@ export default function DashboardApp() {
     <Button
       size="icon"
       variant="ghost"
-      onClick={(e) => {
-        e.stopPropagation(); // 모달 안 열리게 방지
-        deleteChart(chart.id);
-      }}
-      title="Delete"
-    >
+      onClick={(e) => { e.stopPropagation(); deleteChart(chart.id); }} title="Delete" >
       <Trash2 className="w-4 h-4 text-red-500" />
     </Button>
   </div>

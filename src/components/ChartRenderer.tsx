@@ -23,23 +23,20 @@ export default function ChartRenderer({ chart }: { chart: any }) {
       {
         label: chart.title,
         data: data.values,
-        backgroundColor: "rgba(75,192,192,0.4)",
-        borderColor: "rgba(75,192,192,1)",
+        backgroundColor: "#89eedc",
+        borderColor: "#89eedc",
         borderWidth: 1,
       },
     ],
   };
 
-return (
-  <div className="w-full flex justify-center items-center">
-    {chart.type === "bar" ? (
-      <Bar data={chartData} />
-    ) : (
-      <Line data={chartData} />
-    )}
-  </div>
-);
-
-
-
+  return (
+    <div className="w-full flex justify-center items-center">
+      {chart.type === "bar" ? (
+        <Bar data={chartData} />
+      ) : (
+        <Line data={chartData} />
+      )}
+    </div>
+  );
 }
