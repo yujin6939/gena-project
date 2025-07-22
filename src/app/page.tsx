@@ -167,86 +167,33 @@ export default function DashboardApp() {
     }
   };
 
-  return (
-    <div className="w-full flex flex-col items-center gap-6 max-w-6xl mx-auto px-6 py-12 text-center">
-      <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-2 text-center">
-        <Input
-          placeholder="Enter new dashboard name"
-          value={newDashboardName}
-          onChange={(e) => setNewDashboardName(e.target.value)}
-          className="w-full sm:w-[250px] text-center"
-        />
-        <Button
-          onClick={createDashboard}
-          disabled={!newDashboardName.trim()}
-          className="bg-[#f1d3ec] text-[#741b53] hover:bg-[#ecc6e3] border-none"
-        >
-          ➕ Create
-        </Button>
-        {selectedDashboard && (
-          <Dialog
-            open={chartDialogOpen}
-            onOpenChange={(open) => {
-              setChartDialogOpen(open);
-              if (!open) {
-                setNewChart({ title: "", type: "bar", dataEndpoint: "" }); // 초기화
-              }
-            }}
-          >
-            <DialogTrigger asChild>
-              <Button
-                variant="secondary"
-                className="bg-[#f1d3ec] text-[#741b53] hover:bg-[#ecc6e3] border-none"
-              >
-                ➕ Add Chart
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="space-y-4 pt-[80px]">
-              <Input
-                placeholder="Chart Title"
-                value={newChart.title}
-                onChange={(e) => setNewChart({ ...newChart, title: e.target.value })}
-                className="text-center"
-              />
-              <div className="flex gap-2 justify-center">
-                {["bar", "line", "number"].map((type) => (
-                  <Button
-                    key={type}
-                    variant={newChart.type === type ? "default" : "outline"}
-                    onClick={() => setNewChart({ ...newChart, type })}
-                  >
-                    {type}
-                  </Button>
-                ))}
-              </div>
-              <Input
-                placeholder="/api/data/..."
-                value={newChart.dataEndpoint}
-                onChange={(e) => setNewChart({ ...newChart, dataEndpoint: e.target.value })}
-                className="text-center"
-              />
-              <div className="flex justify-center">
-                <Button
-                  onClick={createChart}
-                  disabled={!newChart.title || !newChart.type || !newChart.dataEndpoint}
-                >
-                  Save Chart
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        )}
-      </div>
+return (
+  <div className="w-full max-w-7xl mx-auto px-6 pt-[200px] pb-12 flex flex-row gap-6">
 
-      <div className="flex flex-wrap justify-center gap-2 w-full">
+    {/* 왼쪽 패널 */}
+    <div className="w-full max-w-[240px] flex flex-col gap-4">
+      <Input
+        placeholder="Enter new dashboard name"
+        value={newDashboardName}
+        onChange={(e) => setNewDashboardName(e.target.value)}
+        className="text-center"
+      />
+      <Button
+        onClick={createDashboard}
+        disabled={!newDashboardName.trim()}
+        className="bg-[#f1d3ec] text-[#741b53] hover:bg-[#ecc6e3] border-none"
+      >
+        ➕ Create
+      </Button>
+      <div className="flex flex-col gap-2">
         {dashboards.map((d) => (
-          <div key={d.id} className="flex items-center gap-2 border px-3 py-1 rounded-md">
+          <div key={d.id} className="flex items-center gap-2 border px-2 py-1 rounded-md">
             {editingName === d.id ? (
               <>
                 <Input
                   value={editedName}
                   onChange={(e) => setEditedName(e.target.value)}
-                  className="w-40 text-center"
+                  className="text-center"
                 />
                 <Button onClick={() => updateDashboardName(d.id)} size="sm">✅</Button>
               </>
@@ -257,29 +204,19 @@ export default function DashboardApp() {
                   onClick={() => setSelectedDashboard(d)}
                   className={
                     selectedDashboard?.id === d.id
-                      ? "bg-[#f1d3ec] text-[#741b53] hover:bg-[#ecc6e3] border-none"
-                      : ""
+                      ? "bg-[#f1d3ec] text-[#741b53] hover:bg-[#ecc6e3] border-none w-full"
+                      : "w-full"
                   }
                 >
                   {d.name}
                 </Button>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => {
-                    setEditedName(d.name);
-                    setEditingName(d.id);
-                  }}
-                  title="Edit"
-                >
+                <Button size="icon" variant="ghost" onClick={() => {
+                  setEditedName(d.name);
+                  setEditingName(d.id);
+                }}>
                   <Pencil className="w-4 h-4" />
                 </Button>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => deleteDashboard(d.id)}
-                  title="Delete"
-                >
+                <Button size="icon" variant="ghost" onClick={() => deleteDashboard(d.id)}>
                   <Trash2 className="w-4 h-4 text-red-500" />
                 </Button>
               </>
@@ -287,60 +224,126 @@ export default function DashboardApp() {
           </div>
         ))}
       </div>
-
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="chart-list">
-          {(provided) => (
-            <div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full"
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-            >
-              {charts.map((chart, index) => (
-<Draggable key={chart.id} draggableId={chart.id} index={index}>
-  {(provided) => (
-    <div
-      ref={provided.innerRef}
-      {...provided.draggableProps}
-      {...provided.dragHandleProps}
-    >
-      <Card className="p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
-<CardContent onClick={() => setZoomedChart(chart)} className="cursor-pointer">
-  <div className="flex justify-between items-start mb-2">
-    <h2 className="text-lg font-semibold">{chart.title}</h2>
-    <Button
-      size="icon"
-      variant="ghost"
-      onClick={(e) => { e.stopPropagation(); deleteChart(chart.id); }} title="Delete" >
-      <Trash2 className="w-4 h-4 text-red-500" />
-    </Button>
-  </div>
-  <ChartRenderer chart={chart} />
-</CardContent>
-
-      </Card>
     </div>
-  )}
-</Draggable>
 
+    {/* 오른쪽 차트 영역 */}
+    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* 고정된 Add Chart 박스 */}
+      {selectedDashboard && (
+        <Dialog
+          open={chartDialogOpen}
+          onOpenChange={(open) => {
+            setChartDialogOpen(open);
+            if (!open) {
+              setNewChart({ title: "", type: "bar", dataEndpoint: "" });
+            }
+          }}
+        >
+          <DialogTrigger asChild>
+            <Card className="cursor-pointer flex items-center justify-center h-[225px] bg-[#f1d3ec] hover:bg-[#ecc6e3] transition-colors duration-200">
+              <CardContent className="flex items-center justify-center h-full">
+                <span className="text-[#741b53] text-lg font-semibold">➕ Add Chart</span>
+              </CardContent>
+            </Card>
+          </DialogTrigger>
+          <DialogContent className="space-y-4 pt-[80px]">
+            <Input
+              placeholder="Chart Title"
+              value={newChart.title}
+              onChange={(e) => setNewChart({ ...newChart, title: e.target.value })}
+              className="text-center"
+            />
+            <div className="flex gap-2 justify-center">
+              {["bar", "line", "number"].map((type) => (
+                <Button
+                  key={type}
+                  variant={newChart.type === type ? "default" : "outline"}
+                  onClick={() => setNewChart({ ...newChart, type })}
+                >
+                  {type}
+                </Button>
               ))}
-              {provided.placeholder}
             </div>
+            <Input
+              placeholder="/api/data/..."
+              value={newChart.dataEndpoint}
+              onChange={(e) => setNewChart({ ...newChart, dataEndpoint: e.target.value })}
+              className="text-center"
+            />
+            <div className="flex justify-center">
+              <Button
+                onClick={createChart}
+                disabled={!newChart.title || !newChart.type || !newChart.dataEndpoint}
+              >
+                Save Chart
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* 차트 리스트 (드래그 가능) */}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="chart-list" direction="horizontal">
+          {(provided) => (
+            <>
+              {charts.length > 0 && (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className="contents"
+                >
+                  {charts.map((chart, index) => (
+                    <Draggable key={chart.id} draggableId={chart.id} index={index}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <Card className="p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                            <CardContent onClick={() => setZoomedChart(chart)} className="cursor-pointer">
+                              <div className="flex justify-between items-start mb-2">
+                                <h2 className="text-lg font-semibold">{chart.title}</h2>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  onClick={(e) => { e.stopPropagation(); deleteChart(chart.id); }}
+                                  title="Delete"
+                                >
+                                  <Trash2 className="w-4 h-4 text-red-500" />
+                                </Button>
+                              </div>
+                              <ChartRenderer chart={chart} />
+                            </CardContent>
+                          </Card>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </>
           )}
         </Droppable>
       </DragDropContext>
+
+      {/* 차트 줌 팝업 */}
       <Dialog open={!!zoomedChart} onOpenChange={() => setZoomedChart(null)}>
-  <DialogContent className="max-w-4xl w-full h-[80vh] overflow-auto space-y-4">
-    {zoomedChart && (
-      <>
-        <h2 className="text-2xl font-semibold text-center">{zoomedChart.title}</h2>
-        <div className="w-full h-[60vh] flex items-center justify-center">
-          <ChartRenderer chart={zoomedChart} />
-        </div>
-      </>
-    )}
-  </DialogContent>
-</Dialog>
+        <DialogContent className="max-w-4xl w-full h-[80vh] overflow-auto space-y-4">
+          {zoomedChart && (
+            <>
+              <h2 className="text-2xl font-semibold text-center">{zoomedChart.title}</h2>
+              <div className="w-full h-[60vh] flex items-center justify-center">
+                <ChartRenderer chart={zoomedChart} />
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
-  );
+  </div>
+);
+
 }
