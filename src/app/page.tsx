@@ -176,11 +176,22 @@ export default function DashboardApp() {
           onChange={(e) => setNewDashboardName(e.target.value)}
           className="w-full sm:w-[250px] text-center"
         />
-        <Button onClick={createDashboard}>➕ Create</Button>
+        <Button
+          onClick={createDashboard}
+          disabled={!newDashboardName.trim()}
+          className="bg-violet-200 text-violet-800 hover:bg-violet-300"
+        >
+          ➕ Create
+        </Button>
         {selectedDashboard && (
           <Dialog open={chartDialogOpen} onOpenChange={setChartDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="secondary">➕ Add Chart</Button>
+              <Button
+                variant="secondary"
+                className="bg-violet-200 text-violet-800 hover:bg-violet-300"
+              >
+                ➕ Add Chart
+              </Button>
             </DialogTrigger>
             <DialogContent className="space-y-4 pt-[80px]">
               <Input
@@ -236,6 +247,11 @@ export default function DashboardApp() {
                 <Button
                   variant={selectedDashboard?.id === d.id ? "default" : "outline"}
                   onClick={() => setSelectedDashboard(d)}
+                  className={
+                    selectedDashboard?.id === d.id
+                      ? "bg-violet-200 text-violet-800 hover:bg-violet-300"
+                      : ""
+                  }
                 >
                   {d.name}
                 </Button>
