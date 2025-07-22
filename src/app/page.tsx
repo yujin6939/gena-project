@@ -190,7 +190,7 @@ return (
     {/* 왼쪽 패널 */}
     <div className="w-full max-w-[240px] flex flex-col gap-4">
       <Input
-        placeholder="Enter new dashboard name"
+        placeholder="Enter dashboard name"
         value={newDashboardName}
         onChange={(e) => setNewDashboardName(e.target.value)}
         className="text-center"
@@ -202,6 +202,9 @@ return (
       >
         ➕ Create
       </Button>
+
+<div className="h-[2px] bg-gray-300 my-3 rounded-full" />
+
       <div className="flex flex-col gap-2">
         {dashboards.map((d) => (
           <div key={d.id} className="flex items-center gap-2 border px-2 py-1 rounded-md">
@@ -258,7 +261,7 @@ return (
   </h1>
 )}
     
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="flex flex-row flex-wrap gap-4 items-start">
       {/* 고정된 Add Chart 박스 */}
       {selectedDashboard && (
         <Dialog
@@ -271,7 +274,7 @@ return (
           }}
         >
           <DialogTrigger asChild>
-            <Card className="cursor-pointer flex items-center justify-center h-[225px] bg-[#f1d3ec] hover:bg-[#ecc6e3] transition-colors duration-200">
+            <Card className="cursor-pointer flex items-center justify-center w-[1000px] h-[100px] bg-[#f1d3ec] hover:bg-[#ecc6e3] transition-colors duration-200">
               <CardContent className="flex items-center justify-center h-full">
                 <span className="text-[#741b53] text-lg font-semibold">➕ Add Chart</span>
               </CardContent>
@@ -315,22 +318,22 @@ return (
 
       {/* 차트 리스트 (드래그 가능) */}
       <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="chart-list" direction="horizontal">
-          {(provided) => (
-            <>
-              {charts.length > 0 && (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className="contents"
-                >
-                  {charts.map((chart, index) => (
+  <Droppable droppableId="chart-list" direction="horizontal">
+    {(provided) => (
+      <div
+        ref={provided.innerRef}
+        {...provided.droppableProps}
+        className="flex flex-row flex-wrap gap-4"
+      >
+        {charts.length > 0 &&
+                  charts.map((chart, index) => (
                     <Draggable key={chart.id} draggableId={chart.id} index={index}>
                       {(provided) => (
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
+                          style={provided.draggableProps.style}
                         >
                           <Card className="p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
                             <CardContent onClick={() => setZoomedChart(chart)} className="cursor-pointer">
@@ -359,8 +362,6 @@ return (
                   {provided.placeholder}
                 </div>
               )}
-            </>
-          )}
         </Droppable>
       </DragDropContext>
 

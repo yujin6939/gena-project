@@ -14,6 +14,14 @@ const charts = [
     title: "Orders Over Time",
     dataEndpoint: "/api/data/orders_over_time",
     order: 1
+  },
+  {
+    id: "chart-3",
+    dashboardId: "dashboard-1",
+    type: "number",
+    title: "Total Active Users",
+    dataEndpoint: "/api/data/total_revenue",
+    order: 2
   }
 ];
 

@@ -2,7 +2,7 @@ const dashboards = [
   {
     id: "dashboard-1",
     name: "Marketing KPIs",
-    charts: ["chart-1", "chart-2"],
+    charts: ["chart-1", "chart-2", "chart-3"],
   },
 ];
 
