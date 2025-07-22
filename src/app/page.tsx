@@ -179,7 +179,7 @@ export default function DashboardApp() {
         <Button
           onClick={createDashboard}
           disabled={!newDashboardName.trim()}
-          className="bg-violet-200 text-violet-800 hover:bg-violet-300"
+          className="bg-purple-200 text-purple-700 hover:bg-purple-300 border-none"
         >
           ➕ Create
         </Button>
@@ -188,7 +188,7 @@ export default function DashboardApp() {
             <DialogTrigger asChild>
               <Button
                 variant="secondary"
-                className="bg-violet-200 text-violet-800 hover:bg-violet-300"
+                className="bg-purple-200 text-purple-700 hover:bg-purple-300 border-none"
               >
                 ➕ Add Chart
               </Button>
@@ -249,7 +249,7 @@ export default function DashboardApp() {
                   onClick={() => setSelectedDashboard(d)}
                   className={
                     selectedDashboard?.id === d.id
-                      ? "bg-violet-200 text-violet-800 hover:bg-violet-300"
+                      ? "bg-purple-200 text-purple-700 hover:bg-purple-300 border-none"
                       : ""
                   }
                 >
