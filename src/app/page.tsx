@@ -184,7 +184,15 @@ export default function DashboardApp() {
           ➕ Create
         </Button>
         {selectedDashboard && (
-          <Dialog open={chartDialogOpen} onOpenChange={setChartDialogOpen}>
+          <Dialog
+            open={chartDialogOpen}
+            onOpenChange={(open) => {
+              setChartDialogOpen(open);
+              if (!open) {
+                setNewChart({ title: "", type: "bar", dataEndpoint: "" }); // 초기화
+              }
+            }}
+          >
             <DialogTrigger asChild>
               <Button
                 variant="secondary"
